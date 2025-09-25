@@ -25,4 +25,10 @@ public class usuarioServicio {
         return usuario;
     }
 
+    @Transactional
+    public usuario cambiarContrasenia(long id,usuario usuario) {
+        this.usuarioRepositorio.persist(usuario);
+        return usuario;
+    }
+
 }

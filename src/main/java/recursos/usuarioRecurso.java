@@ -27,5 +27,15 @@ public class usuarioRecurso {
         return usuarioServicio.getUsuario(id) ;
     }
 
+    @PUT
+    @Path("/cambioContra/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void modArticulo(@PathParam("id") long id, usuario usuario) {
+        var usuarioActualizado = usuarioServicio.getUsuario(id);
+        if (usuarioActualizado != null) {
+            usuarioActualizado.setContrasenia(usuario.getContrasenia());
+            usuarioServicio.cambiarContrasenia(id,usuarioActualizado);
+        }
+    }
 
 }

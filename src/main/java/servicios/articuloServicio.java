@@ -31,6 +31,7 @@ public class articuloServicio {
     public articulo getArticulo(Long id) {
         return this.articuloRepositorio.findById(id);
     }
+
     @Transactional
     public articulo addArticulo(articulo articulo) {
         this.articuloRepositorio.persist(articulo);

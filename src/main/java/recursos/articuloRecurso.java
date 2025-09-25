@@ -47,6 +47,7 @@ public class articuloRecurso {
             articuloActualizado.setDescripcion(articulo.getDescripcion());
             articuloActualizado.setValorUnitario(articulo.getValorUnitario());
             articuloActualizado.setFechaCreacion(articulo.getFechaCreacion());
+            articuloActualizado.setUrl(articulo.getUrl());
             articuloServicio.updateArticulo(id,articuloActualizado);
         }
     }

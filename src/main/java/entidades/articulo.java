@@ -26,4 +26,5 @@ public class articulo extends PanacheEntity{
     @CreationTimestamp
     @JsonIgnore
     private LocalDate fechaCreacion;
+    private String url;
 }

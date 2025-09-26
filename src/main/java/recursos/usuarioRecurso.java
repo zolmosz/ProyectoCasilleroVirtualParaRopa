@@ -24,8 +24,9 @@ public class usuarioRecurso {
     @Path("/get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public usuario getUsuarioId(@PathParam("id") long id) {
-        return usuarioServicio.getUsuario(id) ;
+        return usuarioServicio.getUsuario(id);
     }
+
 
     @PUT
     @Path("/cambioContra/{id}")
@@ -37,7 +38,22 @@ public class usuarioRecurso {
     @GET
     @Path("/getContra/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getContra(@PathParam("id") long id) { return usuarioServicio.getUsuario(id).getContrasenia();
+    public String getContra(@PathParam("id") long id) {
+        return usuarioServicio.getUsuario(id).getContrasenia();
     }
 
+
+    @POST
+    @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public usuario login(usuario credenciales) {
+        usuario u = usuarioServicio.getUsuarioRegistrado(credenciales.getEmail(), credenciales.getContrasenia());
+
+        if (u == null) {
+            throw new NotFoundException("Correo o contraseña incorrectos");
+        }
+
+        return u;
+    }
 }

@@ -20,6 +20,14 @@ public class usuarioServicio {
         return this.usuarioRepositorio.findById(id);
     }
 
+    public usuario getUsuarioRegistrado(String correo, String contrasenia) {
+        if (correo == null || contrasenia == null) {
+            throw new IllegalArgumentException("El correo y la contraseña son obligatorios");
+        }
+
+        return usuarioRepositorio.find("email = ?1 and contrasenia = ?2", correo, contrasenia).firstResult();
+    }
+
     @Transactional
     public usuario addUsuario(usuario usuario) {
         this.usuarioRepositorio.persist(usuario);

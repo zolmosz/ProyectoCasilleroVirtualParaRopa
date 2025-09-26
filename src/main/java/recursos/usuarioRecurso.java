@@ -30,12 +30,14 @@ public class usuarioRecurso {
     @PUT
     @Path("/cambioContra/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public void modArticulo(@PathParam("id") long id, usuario usuario) {
-        var usuarioActualizado = usuarioServicio.getUsuario(id);
-        if (usuarioActualizado != null) {
-            usuarioActualizado.setContrasenia(usuario.getContrasenia());
-            usuarioServicio.cambiarContrasenia(id,usuarioActualizado);
-        }
+    public void modContra(@PathParam("id") long id, usuario usuario) {
+        usuarioServicio.cambiarContrasenia(id, usuario);
+    }
+
+    @GET
+    @Path("/getContra/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getContra(@PathParam("id") long id) { return usuarioServicio.getUsuario(id).getContrasenia();
     }
 
 }

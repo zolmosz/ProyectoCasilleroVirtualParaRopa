@@ -24,7 +24,7 @@ public class usuario extends PanacheEntity{
     private String email;
     private String telefono;
     private String contrasenia;
-    @CreationTimestamp
+
     @JsonIgnore
     private LocalDate fechaNacimiento;
 }

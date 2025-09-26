@@ -40,15 +40,6 @@ public class articuloRecurso {
     @Path("/put/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public void modArticulo(@PathParam("id") long id, articulo articulo) {
-        var articuloActualizado = articuloServicio.getArticulo(id);
-        if (articuloActualizado != null) {
-            articuloActualizado.setNombre(articulo.getNombre());
-            articuloActualizado.setTalla(articulo.getTalla());
-            articuloActualizado.setDescripcion(articulo.getDescripcion());
-            articuloActualizado.setValorUnitario(articulo.getValorUnitario());
-            articuloActualizado.setFechaCreacion(articulo.getFechaCreacion());
-            articuloActualizado.setUrl(articulo.getUrl());
-            articuloServicio.updateArticulo(id,articuloActualizado);
-        }
+        articuloServicio.updateArticulo(id, articulo);
     }
 }

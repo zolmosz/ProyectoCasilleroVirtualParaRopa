@@ -1,4 +1,5 @@
 package servicios;
+
 import entidades.articulo;
 import entidades.usuario;
 import io.quarkus.panache.common.Sort;
@@ -26,9 +27,17 @@ public class usuarioServicio {
     }
 
     @Transactional
-    public usuario cambiarContrasenia(long id,usuario usuario) {
-        this.usuarioRepositorio.persist(usuario);
-        return usuario;
+    public usuario cambiarContrasenia(long id, usuario usuario) {
+        var usuarioActualizado = usuarioRepositorio.findById(id);
+        if (usuarioActualizado == null) {
+            throw new RuntimeException("No se encontró el artículo con id " + id);
+        }
+        usuarioActualizado.setContrasenia(usuario.getContrasenia());
+        return usuarioActualizado;
+    }
+
+    public String getContrasenia(Long id) {
+        return this.usuarioRepositorio.findById(id).getContrasenia();
     }
 
 }

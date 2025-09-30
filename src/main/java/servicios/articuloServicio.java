@@ -1,8 +1,6 @@
 package servicios;
-import entidades.articulo;
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import repositorios.articuloRepositorio;

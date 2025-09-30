@@ -1,11 +1,9 @@
 package recursos;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import servicios.articuloServicio;
-import entidades.articulo;
 
 import java.util.List;
 

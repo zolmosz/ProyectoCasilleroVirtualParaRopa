@@ -17,6 +17,10 @@ import java.time.LocalDate;
 @ToString
 public class articulo extends PanacheEntity{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private long id_articulo;
     @JsonProperty("elNombre")
     private String nombre;
@@ -27,4 +31,5 @@ public class articulo extends PanacheEntity{
     @JsonIgnore
     private LocalDate fechaCreacion;
     private String url;
+    private Double peso; // Peso en libras
 }

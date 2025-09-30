@@ -1,8 +1,9 @@
 package repositorios;
 
+import entidades.casillero;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class usuarioRepositorio implements PanacheRepository<usuario> {
+public class casilleroRepositorio implements PanacheRepository<casillero> {
 }

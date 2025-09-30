@@ -1,12 +1,8 @@
 package recursos;
-import entidades.articulo;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import servicios.usuarioServicio;
-import entidades.usuario;
-
-import java.util.List;
 
 @Path("/usuario")
 @AllArgsConstructor

@@ -1,15 +1,9 @@
 package servicios;
 
-import entidades.articulo;
-import entidades.usuario;
-import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import repositorios.usuarioRepositorio;
-
-import java.util.List;
 
 @ApplicationScoped
 @AllArgsConstructor

@@ -3,6 +3,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import servicios.usuarioServicio;
+import entidades.usuario;
 
 @Path("/usuario")
 @AllArgsConstructor
@@ -19,7 +20,7 @@ public class usuarioRecurso {
     @GET
     @Path("/get/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public usuario getUsuarioId(@PathParam("id") long id) {
+    public usuario getUsuarioId(@PathParam("id") Long id) {
         return usuarioServicio.getUsuario(id);
     }
 
@@ -27,14 +28,14 @@ public class usuarioRecurso {
     @PUT
     @Path("/cambioContra/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public void modContra(@PathParam("id") long id, usuario usuario) {
+    public void modContra(@PathParam("id") Long id, usuario usuario) {
         usuarioServicio.cambiarContrasenia(id, usuario);
     }
 
     @GET
     @Path("/getContra/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getContra(@PathParam("id") long id) {
+    public String getContra(@PathParam("id") Long id) {
         return usuarioServicio.getUsuario(id).getContrasenia();
     }
 

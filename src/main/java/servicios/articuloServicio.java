@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import repositorios.articuloRepositorio;
+import entidades.articulo;
 
 import java.util.List;
 

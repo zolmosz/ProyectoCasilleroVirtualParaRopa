@@ -16,12 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 public class articulo extends PanacheEntity{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private long id_articulo;
     @JsonProperty("elNombre")
     private String nombre;
     private String talla;

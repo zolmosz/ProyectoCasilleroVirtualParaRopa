@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import repositorios.usuarioRepositorio;
+import entidades.usuario;
 
 @ApplicationScoped
 @AllArgsConstructor
@@ -29,10 +30,10 @@ public class usuarioServicio {
     }
 
     @Transactional
-    public usuario cambiarContrasenia(long id, usuario usuario) {
+    public usuario cambiarContrasenia(Long id, usuario usuario) {
         var usuarioActualizado = usuarioRepositorio.findById(id);
         if (usuarioActualizado == null) {
-            throw new RuntimeException("No se encontró el artículo con id " + id);
+            throw new RuntimeException("No se encontró el usuario con id " + id);
         }
         usuarioActualizado.setContrasenia(usuario.getContrasenia());
         return usuarioActualizado;

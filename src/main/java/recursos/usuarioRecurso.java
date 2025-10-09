@@ -4,6 +4,7 @@ import jakarta.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import servicios.usuarioServicio;
 import entidades.usuario;
+import dtos.LoginDTO;
 
 @Path("/usuario")
 @AllArgsConstructor
@@ -44,8 +45,8 @@ public class usuarioRecurso {
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public usuario login(usuario credenciales) {
-        usuario u = usuarioServicio.getUsuarioRegistrado(credenciales.getEmail(), credenciales.getContrasenia());
+    public usuario login(LoginDTO credenciales) {
+        usuario u = usuarioServicio.getUsuarioRegistrado(credenciales.email, credenciales.contrasenia);
 
         if (u == null) {
             throw new NotFoundException("Correo o contraseña incorrectos");

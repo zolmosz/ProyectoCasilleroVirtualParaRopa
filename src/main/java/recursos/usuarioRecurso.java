@@ -1,10 +1,13 @@
 package recursos;
+import entidades.articulo;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 import servicios.usuarioServicio;
 import entidades.usuario;
 import dtos.LoginDTO;
+
+import java.util.List;
 
 @Path("/usuario")
 @AllArgsConstructor
@@ -16,6 +19,13 @@ public class usuarioRecurso {
     @Produces(MediaType.APPLICATION_JSON)
     public usuario addUsuario(usuario usuario) {
         return usuarioServicio.addUsuario(usuario);
+    }
+
+    @GET
+    @Path("/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<usuario> getUsuarios() {
+        return usuarioServicio.findAll();
     }
 
     @GET
@@ -53,5 +63,13 @@ public class usuarioRecurso {
         }
 
         return u;
+    }
+
+    @DELETE
+    @Path("/del/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String delUsuario(@PathParam("id") long id) {
+        this.usuarioServicio.deleteUsuario(id);
+        return "Se ha borrado exitosamente";
     }
 }

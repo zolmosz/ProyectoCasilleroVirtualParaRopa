@@ -1,10 +1,13 @@
 package servicios;
 
+import entidades.articulo;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import repositorios.usuarioRepositorio;
 import entidades.usuario;
+
+import java.util.List;
 
 @ApplicationScoped
 @AllArgsConstructor
@@ -15,6 +18,9 @@ public class usuarioServicio {
         return this.usuarioRepositorio.findById(id);
     }
 
+    public List<usuario> findAll() {
+        return this.usuarioRepositorio.listAll();
+    }
     public usuario getUsuarioRegistrado(String correo, String contrasenia) {
         if (correo == null || contrasenia == null) {
             throw new IllegalArgumentException("El correo y la contraseña son obligatorios");
@@ -43,4 +49,8 @@ public class usuarioServicio {
         return this.usuarioRepositorio.findById(id).getContrasenia();
     }
 
+    @Transactional
+    public void deleteUsuario(long id) {
+        this.usuarioRepositorio.deleteById(id);
+    }
 }

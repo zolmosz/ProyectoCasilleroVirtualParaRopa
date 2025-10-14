@@ -56,19 +56,19 @@ public class usuarioServicio {
         if (usuarioActualizado == null) {
             throw new RuntimeException("No se encontró el usuario con id " + id);
         }
-        if (usuarioUpdate.getNombre() != null) {
+        if (usuarioUpdate.getNombre() != null && !usuarioUpdate.getNombre().isEmpty()) {
             usuarioActualizado.setNombre(usuarioUpdate.getNombre());
         }
-        if (usuarioUpdate.getEmail() != null) {
+        if (usuarioUpdate.getEmail() != null && !usuarioUpdate.getEmail().isEmpty()) {
             usuarioActualizado.setEmail(usuarioUpdate.getEmail());
         }
-        if (usuarioUpdate.getTelefono() != null) {
+        if (usuarioUpdate.getTelefono() != null && !usuarioUpdate.getTelefono().isEmpty()) {
             usuarioActualizado.setTelefono(usuarioUpdate.getTelefono());
         }
-        if (usuarioUpdate.getDireccionEntrega() != null) {
+        if (usuarioUpdate.getDireccionEntrega() != null && !usuarioUpdate.getDireccionEntrega().isEmpty()) {
             usuarioActualizado.setDireccionEntrega(usuarioUpdate.getDireccionEntrega());
         }
-        if (usuarioUpdate.getImagen() != null) {
+        if (usuarioUpdate.getImagen() != null && !usuarioUpdate.getImagen().isEmpty()) {
             usuarioActualizado.setImagen(usuarioUpdate.getImagen());
         }
         return usuarioActualizado;

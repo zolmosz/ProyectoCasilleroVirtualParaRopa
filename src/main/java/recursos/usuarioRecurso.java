@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import servicios.usuarioServicio;
 import entidades.usuario;
 import dtos.LoginDTO;
+import dtos.UsuarioUpdateDTO;
 
 import java.util.List;
 
@@ -63,6 +64,14 @@ public class usuarioRecurso {
         }
 
         return u;
+    }
+
+    @PUT
+    @Path("/update/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public usuario updateUsuario(@PathParam("id") Long id, UsuarioUpdateDTO usuarioUpdate) {
+        return usuarioServicio.updateUsuario(id, usuarioUpdate);
     }
 
     @DELETE

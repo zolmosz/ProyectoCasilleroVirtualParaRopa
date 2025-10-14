@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import repositorios.usuarioRepositorio;
 import entidades.usuario;
+import dtos.UsuarioUpdateDTO;
 
 import java.util.List;
 
@@ -47,6 +48,20 @@ public class usuarioServicio {
 
     public String getContrasenia(Long id) {
         return this.usuarioRepositorio.findById(id).getContrasenia();
+    }
+
+    @Transactional
+    public usuario updateUsuario(Long id, UsuarioUpdateDTO usuarioUpdate) {
+        var usuarioActualizado = usuarioRepositorio.findById(id);
+        if (usuarioActualizado == null) {
+            throw new RuntimeException("No se encontró el usuario con id " + id);
+        }
+        usuarioActualizado.setNombre(usuarioUpdate.getNombre());
+        usuarioActualizado.setEmail(usuarioUpdate.getEmail());
+        usuarioActualizado.setTelefono(usuarioUpdate.getTelefono());
+        usuarioActualizado.setDireccionEntrega(usuarioUpdate.getDireccionEntrega());
+        usuarioActualizado.setImagen(usuarioUpdate.getImagen());
+        return usuarioActualizado;
     }
 
     @Transactional

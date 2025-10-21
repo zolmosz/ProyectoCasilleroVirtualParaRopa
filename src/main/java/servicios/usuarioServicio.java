@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class usuarioServicio {
     private usuarioRepositorio usuarioRepositorio;
+    private casilleroServicio casilleroServicio; // inyectado para crear casillero automáticamente
 
     public usuario getUsuario(Long id) {
         return this.usuarioRepositorio.findById(id);
@@ -33,6 +34,12 @@ public class usuarioServicio {
     @Transactional
     public usuario addUsuario(usuario usuario) {
         this.usuarioRepositorio.persist(usuario);
+        try {
+            // Intentar crear casillero para el usuario recién persistido
+            casilleroServicio.crearCasillero(usuario);
+        } catch (IllegalStateException ex) {
+            // Si el casillero ya existe, ignorar para no afectar la creación del usuario
+        }
         return usuario;
     }
 

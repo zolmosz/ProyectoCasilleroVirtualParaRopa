@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 public class usuario extends PanacheEntity{
-    protected Long id;
     @JsonProperty("elNombre")
     private String nombre;
     private String apellidos;
@@ -29,4 +28,7 @@ public class usuario extends PanacheEntity{
 
     @JsonIgnore
     private LocalDate fechaNacimiento;
+
+    // Getter explícito para compatibilidad
+    public Long getId() { return this.id; }
 }

@@ -1,5 +1,6 @@
 package entidades;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,10 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class casillero {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class casillero extends PanacheEntity {
 
     @OneToOne
     @JoinColumn(name = "usuario_id", unique = true)

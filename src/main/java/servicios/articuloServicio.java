@@ -99,16 +99,26 @@ public class articuloServicio {
     }
 
     @Transactional
-    public void deleteArticulo(long id) {
-        this.articuloRepositorio.deleteById(id);
+    public void deleteArticulo(Long casilleroId, long articuloId) {
+        articulo art = this.articuloRepositorio.findById(articuloId);
+        if (art == null) {
+            throw new IllegalArgumentException("Artículo no encontrado");
+        }
+        if (art.getCasillero() == null || !art.getCasillero().getId().equals(casilleroId)) {
+            throw new IllegalArgumentException("El artículo no pertenece al casillero especificado");
+        }
+        this.articuloRepositorio.deleteById(articuloId);
     }
 
     @Transactional
-    public articulo updateArticulo(long id, articulo datosActualizados) {
-        articulo existente = this.articuloRepositorio.findById(id);
+    public articulo updateArticulo(Long casilleroId, long articuloId, articulo datosActualizados) {
+        articulo existente = this.articuloRepositorio.findById(articuloId);
 
         if (existente == null) {
-            throw new RuntimeException("No se encontró el artículo con id " + id);
+            throw new IllegalArgumentException("No se encontró el artículo con id " + articuloId);
+        }
+        if (existente.getCasillero() == null || !existente.getCasillero().getId().equals(casilleroId)) {
+            throw new IllegalArgumentException("El artículo no pertenece al casillero especificado");
         }
         existente.setNombre(datosActualizados.getNombre());
         existente.setTalla(datosActualizados.getTalla());

@@ -2,6 +2,7 @@ package recursos;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import servicios.articuloServicio;
 import entidades.articulo;
@@ -14,10 +15,15 @@ public class articuloRecurso {
     private articuloServicio articuloServicio;
 
     @POST
-    @Path("/add")
+    @Path("/add/{casilleroId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public articulo addProducto(articulo articulo) {
-        return articuloServicio.addArticulo(articulo);
+    public Response addProducto(@PathParam("casilleroId") Long casilleroId, articulo articulo) {
+        try {
+            articulo result = articuloServicio.addArticuloToCasillero(casilleroId, articulo);
+            return Response.status(Response.Status.CREATED).entity(result).build();
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
     }
 
     @GET
@@ -27,18 +33,34 @@ public class articuloRecurso {
         return articuloServicio.findAll();
     }
 
-    @DELETE
-    @Path("/del/{id}")
+    @GET
+    @Path("/get/{casilleroId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String delArticulo(@PathParam("id") long id) {
-        this.articuloServicio.deleteArticulo(id);
-        return "Se ha borrado exitosamente";
+    public List<articulo> getArticulosPorCasillero(@PathParam("casilleroId") Long casilleroId) {
+        return articuloServicio.findByCasillero(casilleroId);
+    }
+
+    @DELETE
+    @Path("/del/{casilleroId}/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response delArticulo(@PathParam("casilleroId") Long casilleroId, @PathParam("id") long id) {
+        try {
+            articuloServicio.deleteArticulo(casilleroId, id);
+            return Response.ok("Se ha borrado exitosamente").build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
     }
 
     @PUT
-    @Path("/put/{id}")
+    @Path("/put/{casilleroId}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public void modArticulo(@PathParam("id") long id, articulo articulo) {
-        articuloServicio.updateArticulo(id, articulo);
+    public Response modArticulo(@PathParam("casilleroId") Long casilleroId, @PathParam("id") long id, articulo articulo) {
+        try {
+            articuloServicio.updateArticulo(casilleroId, id, articulo);
+            return Response.ok().build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
     }
 }

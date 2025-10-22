@@ -21,10 +21,17 @@ public class articulo extends PanacheEntity{
     private String nombre;
     private String talla;
     private String descripcion;
+    private String categoria;
+    private String color;
     private Long valorUnitario;
     @CreationTimestamp
     @JsonIgnore
     private LocalDate fechaCreacion;
     private String url;
     private Double peso; // Peso en libras
+
+    @ManyToOne
+    @JoinColumn(name = "casillero_id")
+    @JsonIgnore
+    private casillero casillero;
 }

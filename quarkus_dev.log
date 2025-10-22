@@ -2353,4 +2353,3 @@ Caused by: org.postgresql.util.PSQLException: ERROR: new row for relation "artic
 	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:190)
 	... 54 more
 Debugger failed to attach: handshake failed - connection prematurally closed
-^C

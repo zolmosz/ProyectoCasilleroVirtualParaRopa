@@ -20,7 +20,6 @@ public class articulo extends PanacheEntity{
     @JsonProperty("elNombre")
     private String nombre;
     private String talla;
-    private String descripcion;
     private String categoria;
     private String color;
     private Long valorUnitario;

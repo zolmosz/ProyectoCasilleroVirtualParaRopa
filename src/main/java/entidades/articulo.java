@@ -16,11 +16,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 public class articulo extends PanacheEntity{
-    private Long id;
     @JsonProperty("elNombre")
     private String nombre;
     private String talla;
-    private String descripcion;
     private String categoria;
     private String color;
     private Long valorUnitario;

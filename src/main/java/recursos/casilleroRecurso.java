@@ -19,12 +19,22 @@ public class casilleroRecurso {
 
     @POST
     @Path("/create/{usuarioId}")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createCasillero(@PathParam("usuarioId") Long usuarioId) {
         usuario u = usuarioServicio.getUsuario(usuarioId);
-        if (u == null) return Response.status(Response.Status.NOT_FOUND).entity("Usuario no encontrado").build();
-        casillero c = casilleroServicio.crearCasillero(u);
-        return Response.status(Response.Status.CREATED).entity(c).build();
+        if (u == null)
+            return Response.status(Response.Status.NOT_FOUND).entity("Usuario no encontrado").build();
+
+        try {
+            casillero c = casilleroServicio.crearCasillero(u);
+            return Response.status(Response.Status.CREATED).entity(c).build();
+        } catch (IllegalStateException e) {
+            return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al crear el casillero: " + e.getMessage()).build();
+        }
     }
 
     @GET

@@ -45,7 +45,11 @@ public class casilleroServicio {
     public casillero quitarArticulo(Long casilleroId, Long articuloId) {
         casillero c = casilleroRepo.findById(casilleroId);
         if (c == null) throw new IllegalArgumentException("Casillero no encontrado");
-        c.getArticulos().removeIf(a -> a.getId().equals(articuloId));
+
+        if (c.getArticulos() != null && !c.getArticulos().isEmpty()) {
+            c.getArticulos().removeIf(a -> a.id.equals(articuloId)); // Panache usa `id` heredado
+        }
+
         casilleroRepo.persist(c);
         return c;
     }
@@ -57,4 +61,6 @@ public class casilleroServicio {
             casilleroRepo.delete(c);
         }
     }
+
+
 }

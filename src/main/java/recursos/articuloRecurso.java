@@ -11,56 +11,101 @@ import java.util.List;
 
 @Path("/articulo")
 @AllArgsConstructor
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class articuloRecurso {
-    private articuloServicio articuloServicio;
 
+    private final articuloServicio articuloServicio;
+
+    // =========================
+    // Agregar artículo a un casillero
+    // =========================
     @POST
     @Path("/add/{casilleroId}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response addProducto(@PathParam("casilleroId") Long casilleroId, articulo articulo) {
         try {
             articulo result = articuloServicio.addArticuloToCasillero(casilleroId, articulo);
             return Response.status(Response.Status.CREATED).entity(result).build();
         } catch (IllegalArgumentException | IllegalStateException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al agregar el artículo").build();
         }
     }
 
+    // =========================
+    // Obtener todos los artículos
+    // =========================
     @GET
     @Path("/get")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<articulo> getArticulos() {
-        return articuloServicio.findAll();
-    }
-
-    @GET
-    @Path("/get/{casilleroId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<articulo> getArticulosPorCasillero(@PathParam("casilleroId") Long casilleroId) {
-        return articuloServicio.findByCasillero(casilleroId);
-    }
-
-    @DELETE
-    @Path("/del/{casilleroId}/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response delArticulo(@PathParam("casilleroId") Long casilleroId, @PathParam("id") long id) {
+    public Response getArticulos() {
         try {
-            articuloServicio.deleteArticulo(casilleroId, id);
-            return Response.ok("Se ha borrado exitosamente").build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            List<articulo> articulos = articuloServicio.findAll();
+            return Response.ok(articulos).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al obtener los artículos").build();
         }
     }
 
-    @PUT
-    @Path("/put/{casilleroId}/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response modArticulo(@PathParam("casilleroId") Long casilleroId, @PathParam("id") long id, articulo articulo) {
+    // =========================
+    // Obtener artículos por casillero
+    // =========================
+    @GET
+    @Path("/get/{casilleroId}")
+    public Response getArticulosPorCasillero(@PathParam("casilleroId") Long casilleroId) {
         try {
-            articuloServicio.updateArticulo(casilleroId, id, articulo);
-            return Response.ok().build();
+            List<articulo> articulos = articuloServicio.findByCasillero(casilleroId);
+            return Response.ok(articulos).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al obtener los artículos del casillero").build();
+        }
+    }
+
+    // =========================
+    // Eliminar un artículo
+    // =========================
+    @DELETE
+    @Path("/del/{casilleroId}/{articuloId}")
+    public Response delArticulo(
+            @PathParam("casilleroId") Long casilleroId,
+            @PathParam("articuloId") Long articuloId) {
+        try {
+            articuloServicio.deleteArticulo(casilleroId, articuloId);
+            return Response.ok("Artículo eliminado correctamente").build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al eliminar el artículo").build();
+        }
+    }
+
+    // =========================
+    // Modificar un artículo
+    // =========================
+    @PUT
+    @Path("/put/{casilleroId}/{articuloId}")
+    public Response modArticulo(
+            @PathParam("casilleroId") Long casilleroId,
+            @PathParam("articuloId") Long articuloId,
+            articulo articulo) {
+        try {
+            articuloServicio.updateArticulo(casilleroId, articuloId, articulo);
+            return Response.ok("Artículo actualizado correctamente").build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al modificar el artículo").build();
         }
     }
 }
+

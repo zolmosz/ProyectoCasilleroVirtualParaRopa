@@ -1,6 +1,5 @@
 package servicios;
 
-import entidades.articulo;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -13,6 +12,7 @@ import java.util.List;
 @ApplicationScoped
 @AllArgsConstructor
 public class usuarioServicio {
+
     private usuarioRepositorio usuarioRepositorio;
     private casilleroServicio casilleroServicio; // inyectado para crear casillero automáticamente
 
@@ -23,12 +23,28 @@ public class usuarioServicio {
     public List<usuario> findAll() {
         return this.usuarioRepositorio.listAll();
     }
+
     public usuario getUsuarioRegistrado(String correo, String contrasenia) {
         if (correo == null || contrasenia == null) {
             throw new IllegalArgumentException("El correo y la contraseña son obligatorios");
         }
 
-        return usuarioRepositorio.find("email = ?1 and contrasenia = ?2", correo, contrasenia).firstResult();
+        return usuarioRepositorio
+                .find("email = ?1 and contrasenia = ?2", correo, contrasenia)
+                .firstResult();
+    }
+
+    // ============================================
+    // NUEVO MÉTODO: Obtener usuario por email
+    // ============================================
+    public usuario getUsuarioPorEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("El email no puede estar vacío");
+        }
+
+        return usuarioRepositorio
+                .find("email", email)
+                .firstResult();
     }
 
     @Transactional

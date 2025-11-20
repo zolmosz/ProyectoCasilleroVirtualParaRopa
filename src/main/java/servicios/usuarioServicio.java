@@ -1,6 +1,8 @@
 package servicios;
 
 import entidades.articulo;
+import io.quarkus.mailer.Mail;
+import io.quarkus.mailer.Mailer;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.List;
 public class usuarioServicio {
     private usuarioRepositorio usuarioRepositorio;
     private casilleroServicio casilleroServicio; // inyectado para crear casillero automáticamente
+    private Mailer mailer;
 
     public usuario getUsuario(Long id) {
         return this.usuarioRepositorio.findById(id);
@@ -84,5 +87,37 @@ public class usuarioServicio {
     @Transactional
     public void deleteUsuario(long id) {
         this.usuarioRepositorio.deleteById(id);
+    }
+
+    /**
+     * Envía la contraseña del usuario por correo electrónico.
+     * ADVERTENCIA DE SEGURIDAD: Este método envía contraseñas en texto plano,
+     * lo cual NO es una práctica recomendada. Se recomienda implementar un flujo
+     * de restablecimiento de contraseña con token temporal en lugar de enviar
+     * la contraseña actual.
+     * 
+     * @param email El correo electrónico del usuario
+     * @throws IllegalArgumentException si el email es nulo o vacío
+     * @throws RuntimeException si no se encuentra un usuario con el correo proporcionado
+     */
+    public void enviarContraseniaPorCorreo(String email) {
+        if (email == null || email.isEmpty()) {
+            throw new IllegalArgumentException("El email es obligatorio");
+        }
+        
+        usuario u = usuarioRepositorio.find("email", email).firstResult();
+        if (u == null) {
+            throw new RuntimeException("No se encontró un usuario con el correo proporcionado");
+        }
+        
+        String contrasenia = u.getContrasenia();
+        String nombre = (u.getNombre() != null && !u.getNombre().isEmpty()) ? u.getNombre() : "usuario";
+        
+        String cuerpo = "Hola " + nombre + ",\n\n"
+                + "Tu contraseña actual es: " + contrasenia + "\n\n"
+                + "Si no solicitaste esto, por favor contacta al soporte.\n\n"
+                + "Saludos,\nEquipo de Casillero Virtual";
+        
+        mailer.send(Mail.withText(email, "Recuperación de contraseña - Casillero Virtual", cuerpo));
     }
 }

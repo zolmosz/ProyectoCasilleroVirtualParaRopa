@@ -2,6 +2,7 @@ package recursos;
 import entidades.articulo;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import servicios.usuarioServicio;
 import entidades.usuario;
@@ -80,5 +81,31 @@ public class usuarioRecurso {
     public String delUsuario(@PathParam("id") long id) {
         this.usuarioServicio.deleteUsuario(id);
         return "Se ha borrado exitosamente";
+    }
+
+    /**
+     * Endpoint para recuperar contraseña.
+     * Envía la contraseña del usuario por correo electrónico.
+     * 
+     * @param email El correo electrónico del usuario (query parameter)
+     * @return Response con mensaje de éxito o error
+     */
+    @POST
+    @Path("/recuperar")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response recuperarContrasenia(@QueryParam("email") String email) {
+        try {
+            usuarioServicio.enviarContraseniaPorCorreo(email);
+            return Response.ok().entity("{\"mensaje\": \"Correo de recuperación enviado\"}").build();
+        } catch (IllegalArgumentException ex) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\": \"" + ex.getMessage() + "\"}").build();
+        } catch (RuntimeException ex) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"error\": \"" + ex.getMessage() + "\"}").build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("{\"error\": \"Error al enviar el correo\"}").build();
+        }
     }
 }

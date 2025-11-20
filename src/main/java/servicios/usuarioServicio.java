@@ -82,6 +82,12 @@ public class usuarioServicio {
         if (usuarioUpdate.getNombre() != null && !usuarioUpdate.getNombre().isEmpty()) {
             usuarioActualizado.setNombre(usuarioUpdate.getNombre());
         }
+        if (usuarioUpdate.getApellidos() != null && !usuarioUpdate.getApellidos().isEmpty()) {
+            usuarioActualizado.setApellidos(usuarioUpdate.getApellidos());
+        }
+        if (usuarioUpdate.getCedula() != null && !usuarioUpdate.getCedula().isEmpty()) {
+            usuarioActualizado.setCedula(usuarioUpdate.getCedula());
+        }
         if (usuarioUpdate.getEmail() != null && !usuarioUpdate.getEmail().isEmpty()) {
             usuarioActualizado.setEmail(usuarioUpdate.getEmail());
         }
@@ -93,6 +99,9 @@ public class usuarioServicio {
         }
         if (usuarioUpdate.getImagen() != null && !usuarioUpdate.getImagen().isEmpty()) {
             usuarioActualizado.setImagen(usuarioUpdate.getImagen());
+        }
+        if (usuarioUpdate.getFechaNacimiento() != null) {
+            usuarioActualizado.setFechaNacimiento(usuarioUpdate.getFechaNacimiento());
         }
         return usuarioActualizado;
     }

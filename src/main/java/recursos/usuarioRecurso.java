@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import servicios.usuarioServicio;
 import entidades.usuario;
 import dtos.LoginDTO;
+import dtos.MessageResponseDTO;
 import dtos.UsuarioUpdateDTO;
 
 import java.util.List;
@@ -96,16 +97,21 @@ public class usuarioRecurso {
     public Response recuperarContrasenia(@QueryParam("email") String email) {
         try {
             usuarioServicio.enviarContraseniaPorCorreo(email);
-            return Response.ok().entity("{\"mensaje\": \"Correo de recuperación enviado\"}").build();
+            return Response.ok()
+                    .entity(MessageResponseDTO.success("Correo de recuperación enviado"))
+                    .build();
         } catch (IllegalArgumentException ex) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"" + ex.getMessage() + "\"}").build();
+                    .entity(MessageResponseDTO.error(ex.getMessage()))
+                    .build();
         } catch (RuntimeException ex) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\": \"" + ex.getMessage() + "\"}").build();
+                    .entity(MessageResponseDTO.error(ex.getMessage()))
+                    .build();
         } catch (Exception ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("{\"error\": \"Error al enviar el correo\"}").build();
+                    .entity(MessageResponseDTO.error("Error al enviar el correo"))
+                    .build();
         }
     }
 }

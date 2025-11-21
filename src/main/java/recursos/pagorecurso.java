@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import dtos.PagoRequestDTO;
 import dtos.PagoResponseDTO;
-import dtos.ArticuloDTO; // 👈 NUEVA IMPORTACIÓN
+import dtos.ArticuloDTO;
 import servicios.pagoServicio;
 import entidades.pago;
-import entidades.articulo; // 👈 Importación de la entidad Artículo
+import entidades.articulo;
 
 @RequestScoped
 @Path("/pagos")
@@ -29,19 +29,18 @@ public class pagorecurso {
     // ==========================================
     /**
      * Convierte la entidad 'pago' en el DTO de respuesta,
-     * incluyendo la lista de Artículos pagados.
+     * incluyendo la lista de Artículos pagados con su URL de imagen.
      */
     private PagoResponseDTO toResponseDTO(pago p) {
 
         // Mapear la lista de entidades Articulo a una lista de ArticuloDTO
         List<ArticuloDTO> articulosDto = p.getArticulosPagados().stream()
-                // Asumiendo que ArticuloDTO(id, nombre, precio) existe.
+                // ArticuloDTO ahora requiere 4 argumentos: id, nombre, precio, imagen.
                 .map(art -> new ArticuloDTO(
                         art.id,
-                        // Asumiendo que el artículo tiene un método getNombre()
                         art.getNombre(),
-                        // Asumiendo que el artículo tiene un método getPrecio()
-                        art.getPrecio()
+                        art.getPrecio(),
+                        art.getUrl() // 💡 CORRECCIÓN CLAVE: Mapear el campo 'url' de la entidad al DTO
                 ))
                 .collect(Collectors.toList());
 
@@ -54,7 +53,7 @@ public class pagorecurso {
                 p.id,
                 p.getNumeroTarjetaMask(),
                 p.getNombre(),
-                articulosDto // 👈 CAMBIO CLAVE: Incluir los artículos
+                articulosDto
         );
     }
 
@@ -89,7 +88,7 @@ public class pagorecurso {
             pago p = pagoServicio.procesarPago(req, casilleroId, persistir);
 
             // Mapeo usando la nueva función
-            PagoResponseDTO resp = toResponseDTO(p); // 👈 CAMBIO CLAVE
+            PagoResponseDTO resp = toResponseDTO(p);
 
             if (persistir) {
                 return Response.status(Response.Status.CREATED).entity(resp).build();
@@ -116,7 +115,7 @@ public class pagorecurso {
     public Response getAll() {
         List<pago> lista = pagoServicio.findAll();
         List<PagoResponseDTO> resp = lista.stream()
-                .map(this::toResponseDTO) // 👈 CAMBIO CLAVE: Usar la función de mapeo
+                .map(this::toResponseDTO)
                 .collect(Collectors.toList());
         return Response.ok(resp).build();
     }
@@ -135,7 +134,7 @@ public class pagorecurso {
         }
 
         // Mapeo usando la nueva función
-        PagoResponseDTO resp = toResponseDTO(p); // 👈 CAMBIO CLAVE
+        PagoResponseDTO resp = toResponseDTO(p);
 
         return Response.ok(resp).build();
     }

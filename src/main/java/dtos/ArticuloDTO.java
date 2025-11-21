@@ -1,13 +1,8 @@
 package dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-// Nota: Eliminamos @AllArgsConstructor para que Lombok solo genere el constructor
-// con los campos de clase (Long id, String nombre, Long precio),
-// y definimos los constructores manualmente.
 
 @Getter
 @Setter
@@ -16,15 +11,16 @@ public class ArticuloDTO {
 
     private Long id;
     private String nombre;
-
-    // Cambiamos el tipo de campo a Long para mantener la consistencia
-    // con la unidad de pago (centavos/pesos) de la entidad 'articulo'.
     private Long precio;
 
-    // Constructor completo (usado para serialización/deserialización si todos los campos están presentes)
-    public ArticuloDTO(Long id, String nombre, Long precio) {
+    // 💡 CAMBIO CLAVE: Usamos 'imagen' en el DTO, que será llenado con el campo 'url' de la Entidad.
+    private String imagen;
+
+    // Constructor completo
+    public ArticuloDTO(Long id, String nombre, Long precio, String imagen) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
+        this.imagen = imagen; // Campo de la URL de la imagen
     }
 }

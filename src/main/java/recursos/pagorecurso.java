@@ -2,14 +2,7 @@ package recursos;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DefaultValue;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
@@ -17,8 +10,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import dtos.PagoRequestDTO;
 import dtos.PagoResponseDTO;
+import dtos.ArticuloDTO; // 👈 NUEVA IMPORTACIÓN
 import servicios.pagoServicio;
 import entidades.pago;
+import entidades.articulo; // 👈 Importación de la entidad Artículo
 
 @RequestScoped
 @Path("/pagos")
@@ -29,9 +24,50 @@ public class pagorecurso {
     @Inject
     private pagoServicio pagoServicio;
 
+    // ==========================================
+    // MÉTODO DE MAPEO: ENTIDAD PAGO A PAGORESPONSE DTO
+    // ==========================================
+    /**
+     * Convierte la entidad 'pago' en el DTO de respuesta,
+     * incluyendo la lista de Artículos pagados.
+     */
+    private PagoResponseDTO toResponseDTO(pago p) {
+
+        // Mapear la lista de entidades Articulo a una lista de ArticuloDTO
+        List<ArticuloDTO> articulosDto = p.getArticulosPagados().stream()
+                // Asumiendo que ArticuloDTO(id, nombre, precio) existe.
+                .map(art -> new ArticuloDTO(
+                        art.id,
+                        // Asumiendo que el artículo tiene un método getNombre()
+                        art.getNombre(),
+                        // Asumiendo que el artículo tiene un método getPrecio()
+                        art.getPrecio()
+                ))
+                .collect(Collectors.toList());
+
+        // Retornar el PagoResponseDTO con el constructor actualizado
+        return new PagoResponseDTO(
+                p.getStatus(),
+                p.getMensaje(),
+                p.getMetodo(),
+                p.getMonto(),
+                p.id,
+                p.getNumeroTarjetaMask(),
+                p.getNombre(),
+                articulosDto // 👈 CAMBIO CLAVE: Incluir los artículos
+        );
+    }
+
+    // ======================
+    // PROCESAR PAGO
+    // ======================
     @POST
-    @Path("/procesar")
-    public Response procesarPago(PagoRequestDTO req, @QueryParam("persistir") @DefaultValue("true") boolean persistir) {
+    @Path("/procesar/{casilleroId}")
+    public Response procesarPago(
+            PagoRequestDTO req,
+            @PathParam("casilleroId") Long casilleroId,
+            @QueryParam("persistir") @DefaultValue("true") boolean persistir) {
+
         try {
             if (req == null) {
                 return Response.status(Response.Status.BAD_REQUEST)
@@ -46,25 +82,21 @@ public class pagorecurso {
             System.out.println("[PagoRecurso] recibí request -> metodo: " + req.getMetodo()
                     + " nombre: " + req.getNombre()
                     + " monto: " + req.getMonto()
+                    + " casilleroId: " + casilleroId
                     + " persistir: " + persistir);
 
-            pago p = pagoServicio.procesarPago(req, persistir);
+            // Llamada al servicio
+            pago p = pagoServicio.procesarPago(req, casilleroId, persistir);
 
-            PagoResponseDTO resp = new PagoResponseDTO(
-                    p.getStatus(),
-                    p.getMensaje(),
-                    p.getMetodo(),
-                    p.getMonto() != null ? p.getMonto().doubleValue() : null,
-                    p.id,
-                    p.getNumeroTarjetaMask(),
-                    p.getNombre()
-            );
+            // Mapeo usando la nueva función
+            PagoResponseDTO resp = toResponseDTO(p); // 👈 CAMBIO CLAVE
 
             if (persistir) {
                 return Response.status(Response.Status.CREATED).entity(resp).build();
             } else {
                 return Response.ok(resp).build();
             }
+
         } catch (IllegalArgumentException ex) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(Map.of("error", ex.getMessage()))
@@ -77,23 +109,21 @@ public class pagorecurso {
         }
     }
 
+    // ======================
+    // OBTENER TODOS LOS PAGOS
+    // ======================
     @GET
     public Response getAll() {
         List<pago> lista = pagoServicio.findAll();
         List<PagoResponseDTO> resp = lista.stream()
-                .map(p -> new PagoResponseDTO(
-                        p.getStatus(),
-                        p.getMensaje(),
-                        p.getMetodo(),
-                        p.getMonto() != null ? p.getMonto().doubleValue() : null,
-                        p.id,
-                        p.getNumeroTarjetaMask(),
-                        p.getNombre()
-                ))
+                .map(this::toResponseDTO) // 👈 CAMBIO CLAVE: Usar la función de mapeo
                 .collect(Collectors.toList());
         return Response.ok(resp).build();
     }
 
+    // ======================
+    // OBTENER PAGO POR ID
+    // ======================
     @GET
     @Path("/{id}")
     public Response getById(@PathParam("id") Long id) {
@@ -103,15 +133,10 @@ public class pagorecurso {
                     .entity(Map.of("error", "Pago no encontrado"))
                     .build();
         }
-        PagoResponseDTO resp = new PagoResponseDTO(
-                p.getStatus(),
-                p.getMensaje(),
-                p.getMetodo(),
-                p.getMonto() != null ? p.getMonto().doubleValue() : null,
-                p.id,
-                p.getNumeroTarjetaMask(),
-                p.getNombre()
-        );
+
+        // Mapeo usando la nueva función
+        PagoResponseDTO resp = toResponseDTO(p); // 👈 CAMBIO CLAVE
+
         return Response.ok(resp).build();
     }
 }
